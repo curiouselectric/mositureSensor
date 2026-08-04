@@ -1,15 +1,17 @@
 
 #include "soil_moisture_rs485.h"
-#include <SoftwareSerial.h>
+#include "SoftwareSerial.h"
 
 moistureSensor soilMoistureSensor;
 
 /****************************************************************************/
 /***       Local Variable                                                 ***/
 /****************************************************************************/
-#define sensorBaudRate 4800
-#define sensorTx 2
-#define sensorRx 3
+//#define sensorBaudRate 4800     // Baud rate depends upon model
+#define sensorBaudRate 9600
+
+#define sensorTx 3
+#define sensorRx 2
 // Request frame for the soil sensor
 // const byte soilSensorRequestCRC[] = { 0x01, 0x03, 0x00, 0x00, 0x00, 0x02, 0xC4, 0x0B };  // This only works if device ID is 01.
 
@@ -95,13 +97,16 @@ bool moistureSensor::readHumiture(byte ID) {
     }
 
     // Parse and calculate the Moisture value
-    int Moisture_Int = int(soilSensorResponse[3] << 8 | soilSensorResponse[4]);
+    // int Moisture_Int = int(soilSensorResponse[3] << 8 | soilSensorResponse[4]);
+    // moisturePercent = Moisture_Int / 10.0;
+    int Moisture_Int = int(soilSensorResponse[5] << 8 | soilSensorResponse[6]);     // Depends upon model
     moisturePercent = Moisture_Int / 10.0;
 
     // Parse and calculate the Temperature value
-    int Temperature_Int = int(soilSensorResponse[5] << 8 | soilSensorResponse[6]);
+    // int Temperature_Int = int(soilSensorResponse[5] << 8 | soilSensorResponse[6]);
+    // soilTemperatureC = Temperature_Int / 10.0;
+    int Temperature_Int = int(soilSensorResponse[3] << 8 | soilSensorResponse[4]);    // Depends upon model
     soilTemperatureC = Temperature_Int / 10.0;
-
     // Check if temperature is negative and convert accordingly
     if (Temperature_Int > 0x7FFF) {
       soilTemperatureC = 0x10000 - Temperature_Int;

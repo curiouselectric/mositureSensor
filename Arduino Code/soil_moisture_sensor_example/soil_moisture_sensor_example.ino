@@ -13,14 +13,19 @@
 bool changeIDflag = false;
 
 void setup() {
+    // Set up the RS485 power output
+  pinMode(4, OUTPUT);
+  digitalWrite(4, HIGH);
   Serial.begin(9600);  // Serial port to show the data
   soilMoistureSensor.begin();
+
+
 }
 void loop() {
 
   // Flip around the ID - this test the ID change sub-routine
   if (changeIDflag == false) {
-    soilMoistureSensor.changeID(1, 2);
+    //soilMoistureSensor.changeID(1, 2);
     changeIDflag = true;
     Serial.println("ID should be 2");
   } else {
@@ -43,5 +48,5 @@ void loop() {
     Serial.println(" °C");
   }
 
-  delay(5000);
+  delay(2000);
 }
